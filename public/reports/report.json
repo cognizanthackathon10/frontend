@@ -1,0 +1,67 @@
+[
+  {
+    "id": "PHP-SYSTEM-EXEC-001",
+    "file": "samples/php/index.php",
+    "line": 12,
+    "severity": "HIGH",
+    "category": "Command Execution",
+    "message": "Command execution can lead to injection if args are tainted.",
+    "suggestion": "Avoid shell execution; use built-in APIs and strict validation.",
+    "owasp": "A03:2021-Injection",
+    "cwe": "",
+    "snippet": "if (isset($_GET['cmd'])) {",
+    "detected_by": "Regex"
+  },
+  {
+    "id": "PHP-XSS-001",
+    "file": "samples/php/index.php",
+    "line": 8,
+    "severity": "HIGH",
+    "category": "Cross-Site Scripting",
+    "message": "Echoing unescaped user input can cause XSS.",
+    "suggestion": "Encode output with htmlspecialchars and validate inputs.",
+    "owasp": "A03:2021-Injection",
+    "cwe": "",
+    "snippet": "echo $_GET['html']; // XSS",
+    "detected_by": "Regex"
+  },
+  {
+    "id": "PHP-CRYPTO-001",
+    "file": "samples/php/index.php",
+    "line": 10,
+    "severity": "MEDIUM",
+    "category": "Weak Cryptography",
+    "message": "Weak hash algorithm used.",
+    "suggestion": "Use password_hash (bcrypt/argon2) or sodium/openssl strong hashes.",
+    "owasp": "A02:2021-Cryptographic Failures",
+    "cwe": "",
+    "snippet": "$hash = md5($_GET['p']); // weak crypto",
+    "detected_by": "Regex"
+  },
+  {
+    "id": "PHP-ERROR-LEAK-001",
+    "file": "samples/php/index.php",
+    "line": 19,
+    "severity": "LOW",
+    "category": "Error Handling",
+    "message": "Leaking raw errors or phpinfo() reveals sensitive info.",
+    "suggestion": "Log errors server-side and show generic error messages.",
+    "owasp": "A09:2021-Security Logging and Monitoring Failures",
+    "cwe": "",
+    "snippet": "var_dump($e); // error leak",
+    "detected_by": "Regex"
+  },
+  {
+    "id": "PHP-SYSTEM-AST-001",
+    "file": "samples/php/index.php",
+    "line": 13,
+    "severity": "CRITICAL",
+    "category": "Command Injection",
+    "message": "system() detected in PHP AST; may allow command injection. | system() detected in PHP AST; may allow command injection. | system() called with user input \u2192 Command Injection. | system() called with user input \u2192 Command Injection. | system() called with user input \u2192 Command Injection.",
+    "suggestion": "Avoid system(); use safer built-in APIs. | Avoid system(); use safer built-in APIs. | Avoid system(); use built-in APIs. | Avoid system(); use built-in APIs. | Avoid system(); use safer APIs or sanitize inputs.",
+    "owasp": "A03:2021-Injection",
+    "cwe": "",
+    "snippet": "system(\"ls \" . $_GET['cmd']); // command injection",
+    "detected_by": "AST"
+  }
+]
