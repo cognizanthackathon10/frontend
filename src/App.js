@@ -263,34 +263,34 @@ function App() {
     const formData = new FormData();
     formData.append('file', uploadFile);
 
-    try {
-      // Assuming the backend API is running on port 5000
-     // Use backend URL from environment variable (or fallback to empty string)
-const API_BASE = process.env.REACT_APP_API_BASE_URL || '';
+  try {
+  const API_BASE = process.env.REACT_APP_API_BASE_URL || '';
 
-await axios.post(`${API_BASE}/upload`, formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-});
+  const response = await axios.post(`${API_BASE}/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
+  if (response.data.success) {
+    setIssues(response.data.issues);
+    setUploadedFileName(response.data.file_name);
+    setUploadSuccess(
+      `Successfully analyzed ${response.data.file_name}. Found ${response.data.total_issues} issues.`
+    );
+    setHasUploadedFile(true);
+    setPage(1);
+  } else {
+    setUploadError(response.data.error || "Upload failed");
+  }
+} catch (error) {
+  console.error("Upload error:", error);
+  setUploadError(error.response?.data?.error || "Failed to upload and analyze file");
+} finally {
+  setUploadLoading(false);
+}
 
-      if (response.data.success) {
-        setIssues(response.data.issues);
-        setUploadedFileName(response.data.file_name);
-        setUploadSuccess(`Successfully analyzed ${response.data.file_name}. Found ${response.data.total_issues} issues.`);
-        setHasUploadedFile(true); // Mark that a file has been uploaded
-        setPage(1); // Reset to first page
-      } else {
-        setUploadError(response.data.error || "Upload failed");
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
-      setUploadError(error.response?.data?.error || "Failed to upload and analyze file");
-    } finally {
-      setUploadLoading(false);
-    }
-  };
+  }
 
   // Handle file selection
   const handleFileChange = (event) => {
