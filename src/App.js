@@ -265,11 +265,15 @@ function App() {
 
     try {
       // Assuming the backend API is running on port 5000
-      const response = await axios.post('http://localhost:5000/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+     // Use backend URL from environment variable (or fallback to empty string)
+const API_BASE = process.env.REACT_APP_API_BASE_URL || '';
+
+await axios.post(`${API_BASE}/upload`, formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
+
 
       if (response.data.success) {
         setIssues(response.data.issues);
